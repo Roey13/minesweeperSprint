@@ -1,19 +1,60 @@
 body {
     text-align: center;
+    background-color: lightblue;
 }
 
 .board-container {
-    width: 300px;
-    height: 300px;
+    margin: auto;
+    width: 500px;
+    height: 500px;
     text-align: center;
-    font-size: 1.5em;
+    table-layout: fixed;
+
+}
+
+table {
+    margin: auto;
+    table-layout: fixed;
+    width: 100%;
+    height: inherit;
 }
 
 .board-container td {
-    width: 50px;
+    font-size: 1.5em;
+    width: 25%;
     height: 50px;
     background-color: darkgrey;
     color: black;
     border-color: black;
     border-style: solid;
+
+}
+
+.diffs button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 10%;
+    height: inherit;
+    border-color: black;
+    border-width: 3px;
+    font-size: 1em;
+    font-family: arial;
+    font-weight: bold;
+}
+
+.smiley button {
+    margin-bottom: 10px;
+    font-size: 1.5em;
+    border-color: black;
+    border-width: 3px;
+}
+
+#minutes {
+    font-size: 30px;
+    font-family: arial;
+}
+
+#seconds {
+    font-size: 30px;
+    font-family: arial;
 }
