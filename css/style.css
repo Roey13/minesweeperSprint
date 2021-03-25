@@ -1,0 +1,19 @@
+body {
+    text-align: center;
+}
+
+.board-container {
+    width: 300px;
+    height: 300px;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.board-container td {
+    width: 50px;
+    height: 50px;
+    background-color: darkgrey;
+    color: black;
+    border-color: black;
+    border-style: solid;
+}
