@@ -6,9 +6,16 @@ body {
     background-attachment: fixed;
 }
 
+.board-container{
+    width: 550px;
+    height: 550px;
+    margin: auto;   
+}
+
 table{
-    margin:auto;
-    table-layout: auto;
+    margin: auto;
+    width: 100%;
+    height: 100%;
 }
 
 .cell {

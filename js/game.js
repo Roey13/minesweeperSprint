@@ -46,8 +46,7 @@ function createLives() {
         heart += '💜'
     }
 
-    if (gGame.livesLeft < 1) strHTML = `LIVES LEFT: 0`
-    else strHTML = `LIVES LEFT: ${heart}`
+    strHTML = `LIVES LEFT: ${heart}`
 
     var lives = document.querySelector('.lives');
     lives.innerHTML = strHTML;
