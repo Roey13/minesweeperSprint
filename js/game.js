@@ -1,18 +1,21 @@
 'use strict'
 //vars & consts
 const MINE = '💣'
-const EMPTY = '✅'
+const EMPTY = ''
 const FLAG = '🚩'
 const HIDDEN = ''
 var gBoard;
 var timer;
 var gSize = 4;
+var gMines = 0;
+var gCellClickedCount = 0;
 var gLevel = {};
 var gGame = {
     isOn: false,
     shownCount: 0,
     markedCount: 0,
-    secsPassed: 0
+    secsPassed: 0,
+    livesLeft: 2
 }
 
 //functions
@@ -20,10 +23,12 @@ function initGame() {
     totalSeconds = 0;
     clearInterval(timer);
     resetTimer()
+    gGame.livesLeft = 2;
+    createLives()
     gGame.isOn = true;
     gGame.shownCount = 0;
+    gGame.markedCount = 0;
     gBoard = buildBoard(gSize)
-    printMat(gBoard, '.board-container');
     createDiffs()
     smiley('😀')
 }
@@ -34,11 +39,22 @@ function smiley(face) {
     smiley.innerHTML = strHTML
 }
 
+function createLives() {
+    var strHTML = ''
+    var heart = ''
+    for (var i = 0; i < gGame.livesLeft; i++){
+        heart += '💜'
+    }
+
+    if (gGame.livesLeft < 1) strHTML = `LIVES LEFT: 0`
+    else strHTML = `LIVES LEFT: ${heart}`
+
+    var lives = document.querySelector('.lives');
+    lives.innerHTML = strHTML;
+}
+
 function buildBoard(size) {
-    var mines;
-    if (size === 4) mines = 2
-    if (size === 8) mines = 12
-    if (size === 12) mines = 30
+    
 
     var board = [];
     for (var i = 0; i < size; i++) {
@@ -55,17 +71,25 @@ function buildBoard(size) {
         }
     }
 
-    for (var i = 0; i < mines; i++) {
-        board[getRandomIntInclusive(0, size - 1)][getRandomIntInclusive(0, size - 1)].isMine = true;
-    }
 
-    for (var i = 0; i < board.length; i++) {
-        for (var j = 0; j < board.length; j++) {
-            setMinesNegsCount(board, i, j)
-        }
-    }
+    printMat(board, '.board-container');
+
+
+   
 
     return board;
+}
+
+function placeMines(board, mines, clcikedI, clikedJ) {
+    for (var i = 0; i < mines; i++) {
+        var cellI = getRandomIntInclusive(0, board.length - 1);
+        var cellJ = getRandomIntInclusive(0, board.length - 1);
+        while (board[cellI][cellJ].isMine || cellI === clcikedI && cellJ === clikedJ) {
+            cellI = getRandomIntInclusive(0, board.length - 1);
+            cellJ = getRandomIntInclusive(0, board.length - 1);
+        }
+        board[cellI][cellJ].isMine = true;
+    }
 }
 
 function printMat(mat, selector) {
@@ -100,6 +124,7 @@ function printMat(mat, selector) {
     strHTML += '</tbody></table>';
     var elContainer = document.querySelector(selector);
     elContainer.innerHTML = strHTML;
+    
 }
 
 function setMinesNegsCount(mat, cellI, cellJ) {
@@ -120,11 +145,30 @@ function setMinesNegsCount(mat, cellI, cellJ) {
 
 function cellClicked(elCell, cellI, cellJ) {
 
+    
+    if (gBoard[cellI][cellJ].isShown) return;
+    
+    if (gSize === 4) gMines = 2
+    if (gSize === 8) gMines = 12
+    if (gSize === 12) gMines = 30
 
 
     if (gGame.shownCount === 0 && gGame.markedCount === 0) {
         gGame.isOn = true;
         timer = setInterval(setTime, 1000);
+        gBoard[cellI][cellJ].isMine = false;
+
+        placeMines(gBoard, gMines, cellI, cellJ)
+        
+
+
+        for (var i = 0; i < gBoard.length; i++) {
+            for (var j = 0; j < gBoard.length; j++) {
+                setMinesNegsCount(gBoard, i, j)
+            }
+        }
+
+        printMat(gBoard, '.board-container');
     }
 
     if (gGame.isOn === false) return;
@@ -132,13 +176,24 @@ function cellClicked(elCell, cellI, cellJ) {
     if (gBoard[cellI][cellJ].isMarked === true) return
 
     if (gBoard[cellI][cellJ].isMine) {
+        gGame.livesLeft--;
+        createLives()
+        checkIfShown()
+    }
+
+    if (gBoard[cellI][cellJ].isMine && gGame.livesLeft === 0) {
+        gGame.livesLeft--;
+        createLives()
         gameOver()
         smiley('🤯')
+        printMat(gBoard, '.board-container')
+        checkIfShown()
+        return
     }
 
     gBoard[cellI][cellJ].isShown = true
     gGame.shownCount += 1;
-
+    
 
     if (gBoard[cellI][cellJ].minesAroundCount === 0) {
         for (var i = cellI - 1; i <= cellI + 1; i++) {
@@ -146,7 +201,7 @@ function cellClicked(elCell, cellI, cellJ) {
             for (var j = cellJ - 1; j <= cellJ + 1; j++) {
                 if (j < 0 || j >= gBoard.length) continue;
                 if (i === cellI && j === cellJ) continue;
-                if (!gBoard[i][j].isMine && !gBoard[i][j].isShown) {
+                if (!gBoard[i][j].isMine && !gBoard[i][j].isShown && !gBoard[i][j].isMarked) {
                     gBoard[i][j].isShown = true;
                     gGame.shownCount++
                 }
@@ -154,14 +209,16 @@ function cellClicked(elCell, cellI, cellJ) {
         }
     }
 
-    console.log('gGame.shownCount', gGame.shownCount);
+
+
     printMat(gBoard, '.board-container')
     checkGameOver()
+    checkIfShown()
+    console.log('gGame.shownCount',gGame.shownCount);
 };
 
 
 function cellMarked(elCell, cellI, cellJ) {
-
 
     if (gGame.shownCount === 0 && gGame.markedCount === 0) {
         gGame.isOn = true;
@@ -175,7 +232,23 @@ function cellMarked(elCell, cellI, cellJ) {
     elCell.isMarked = !elCell.isMarked
     printMat(gBoard, '.board-container')
     checkGameOver()
+        console.log('gGame.markedCount', gGame.markedCount);
+
+        checkIfShown()
+
 };
+
+function checkIfShown(){
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard.length; j++){
+            if (gBoard[i][j].isShown){
+                var elCell = document.querySelector('.cell' + i + '-' + j)
+                elCell.style.backgroundColor = '#888';
+                elCell.style.borderColor = '#bbb #aaa';
+            }
+        }
+    }
+}
 
 function checkGameOver() {
     var hiddenMinesCount = 0;
@@ -190,26 +263,26 @@ function checkGameOver() {
     gGame.markedCount = flagsCount
 
     if (gSize === 4) {
-        if (hiddenMinesCount === 2 && gGame.shownCount === (gSize ** 2 - hiddenMinesCount)) {
+        if (gGame.markedCount === 2 && gGame.shownCount === (gSize ** 2 - hiddenMinesCount)) {
             smiley('😎')
             gameOver();
         }
     }
 
     if (gSize === 8) {
-        if (hiddenMinesCount === 12 && gGame.shownCount === (gSize ** 2 - hiddenMinesCount)) {
+        if (gGame.markedCount === 12 && gGame.shownCount === (gSize ** 2 - hiddenMinesCount)) {
             smiley('😎')
             gameOver();
         }
     }
-
 
     if (gSize === 12) {
-        if (hiddenMinesCount === 30 && (gSize ** 2 - hiddenMinesCount)) {
+        if (gGame.markedCount === 30 && gGame.shownCount === (gSize ** 2 - hiddenMinesCount)) {
             smiley('😎')
             gameOver();
         }
     }
+
 };
 
 function gameOver() {

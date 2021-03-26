@@ -1,41 +1,35 @@
 body {
     text-align: center;
-    background-color: lightblue;
+    background-image: url("../pics/BG.png");
+    background-image: fixed;
+    background-size: cover;
+    background-attachment: fixed;
 }
 
-.board-container {
-    margin: auto;
-    width: 500px;
-    height: 500px;
-    text-align: center;
-    table-layout: fixed;
-
+table{
+    margin:auto;
+    table-layout: auto;
 }
 
-table {
-    margin: auto;
-    table-layout: fixed;
-    width: 100%;
-    height: inherit;
-}
-
-.board-container td {
-    font-size: 1.5em;
-    width: 25%;
-    height: 50px;
-    background-color: darkgrey;
+.cell {
+    height: 2em;
+    width: 2em;
+    font-family: arial;
     color: black;
-    border-color: black;
     border-style: solid;
-
+	border-color:#bbb #888 #666 #aaa;
+	border-width:3px 4px 4px 3px;
+	background:#aaa;
+	font-weight:900;
 }
 
 .diffs button {
+    border-color:#bbb #888 #666 #aaa;
+	background:#aaa;
     margin-top: 10px;
     margin-bottom: 10px;
     width: 10%;
     height: inherit;
-    border-color: black;
     border-width: 3px;
     font-size: 1em;
     font-family: arial;
@@ -43,9 +37,10 @@ table {
 }
 
 .smiley button {
+    border-color:#bbb #888 #666 #aaa;
+	background:#aaa;
     margin-bottom: 10px;
     font-size: 1.5em;
-    border-color: black;
     border-width: 3px;
 }
 
@@ -57,4 +52,10 @@ table {
 #seconds {
     font-size: 30px;
     font-family: arial;
+}
+
+.lives{
+    height: 40px;
+    font-family: arial;
+    font-size: 25px;
 }
