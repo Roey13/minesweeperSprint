@@ -7,8 +7,8 @@ body {
 }
 
 .board-container{
-    width: 550px;
-    height: 550px;
+    width: 450px;
+    height: 450px;
     margin: auto;   
 }
 
@@ -19,8 +19,10 @@ table{
 }
 
 .cell {
-    height: 2em;
-    width: 2em;
+    padding: 0px;
+    font-size: 15px;
+    height: 25px;
+    width: 25px;
     font-family: arial;
     color: black;
     border-style: solid;
@@ -65,4 +67,24 @@ table{
     height: 40px;
     font-family: arial;
     font-size: 25px;
+}
+
+.hints{
+    height: 40px;
+    font-family: arial;
+    font-size: 25px;
+}
+
+.hints button{
+    border-color:#bbb #888 #666 #aaa;
+	background:#aaa;
+    font-size: inherit;
+}
+
+.hints .hint1 {
+background-color: rgb(89, 202, 14);
+}
+
+.hinted {
+    background: yellow;
 }
