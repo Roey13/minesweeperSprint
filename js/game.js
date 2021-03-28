@@ -21,6 +21,16 @@ var gGame = {
 }
 
 function initGame() {
+
+    if (gSize === 4) {
+        gHints = 2;
+        gGame.livesLeft = 2;
+    } else {
+        gHints = 3;
+        gGame.livesLeft = 3;
+    }
+
+
     clearInterval(gTimer);
     resetTimer()
     createHints()
