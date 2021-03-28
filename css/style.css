@@ -88,3 +88,9 @@ background-color: rgb(89, 202, 14);
 .hinted {
     background: yellow;
 }
+
+.best {
+    height: 40px;
+    font-family: arial;
+    font-size: 25px;
+}
